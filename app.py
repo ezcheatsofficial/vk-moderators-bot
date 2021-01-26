@@ -32,14 +32,21 @@ def on_webhook():
             created_by = requests.get(
                 f"https://forum.ezcheats.ru/admin/users/{review_data['created_by_id']}.json",
                 headers=headers).json()['username']
-            target_created_by = requests.get(
-                f"https://forum.ezcheats.ru/admin/users/{review_data['target_created_by_id']}.json",
-                headers=headers).json()['username']
-            msg = f"⚠️ {created_by} отправил новое сообщение на премодерацию!\n" \
-                  f"Автор сообщения: {target_created_by}\n" \
-                  f"Ссылка: {review_data['target_url']}\n" \
-                  f"Создано: {review_data['created_at']} "
-
+            if review_data['type'] == 'ReviewableFlaggedPost':
+                target_created_by = requests.get(
+                    f"https://forum.ezcheats.ru/admin/users/{review_data['target_created_by_id']}.json",
+                    headers=headers).json()['username']
+                msg = f"⚠️ {created_by} отправил жалобу на какое-то сообщение!\n" \
+                    f"Автор: {target_created_by}\n" \
+                    f"Ссылка: {review_data['target_url']}\n" \
+                    f"Создано: {review_data['created_at']}\n\n" \
+                    f"Пожалуйста, посмотрите: https://forum.ezcheats.ru/review/{review_data['id']}"
+            elif review_data['type'] == 'ReviewableQueuedPost':
+                msg = f"⚠️ На премодерации появился новый топик или сообщение!\n" \
+                    f"Автор: {created_by}\n" \
+                    f"Заголовок: «{review_data['payload']['title']}»\n" \
+                    f"Создано: {review_data['created_at']} \n\n" \
+                    f"Пожалуйста, посмотрите: https://forum.ezcheats.ru/review/{review_data['id']}"
     if msg != "":
         vk.messages.send(peer_id=vk_chat_id, message=msg, random_id=random.randint(1, 1000000))
         
