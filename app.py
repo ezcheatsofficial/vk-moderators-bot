@@ -14,7 +14,7 @@ import pefile
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'private_key.json'
 
-DIALOGFLOW_PROJECT_ID = 'mirea-ninja'
+DIALOGFLOW_PROJECT_ID = 'your_project_id'
 DIALOGFLOW_LANGUAGE_CODE = 'ru'
 session_client = dialogflow.SessionsClient()
 
@@ -188,6 +188,4 @@ def on_webhook():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', ssl_context=(
-        '/var/discourse/shared/standalone/ssl/mirea.ninja.cer', '/var/discourse/shared/standalone/ssl/mirea.ninja.key'))
-    #app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0')
